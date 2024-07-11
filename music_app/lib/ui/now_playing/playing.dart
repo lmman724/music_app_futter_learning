@@ -36,18 +36,32 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
     // );
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text(
-          "Now Playing",
+        navigationBar: CupertinoNavigationBar(
+          middle: const Text(
+            "Now Playing",
+          ),
+          trailing: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_horiz),
+          ),
         ),
-        trailing: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_horiz),
-        ),
-      ),
-      child: const Center(
-        child: Text("Now Playing Page"),
-      ),
-    );
+        child: Center(
+          child: Scaffold(
+              body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(widget.playingSong.album),
+                const SizedBox(
+                  height: 16,
+                ),
+                const Text("_ ___ _"),
+                const SizedBox(
+                  height: 48,
+                )
+              ],
+            ),
+          )),
+        ));
   }
 }
