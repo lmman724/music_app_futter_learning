@@ -1,7 +1,9 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/model/song.dart';
+import 'audio_player_manager.dart';
 
 class NowPlaying extends StatelessWidget {
   const NowPlaying({super.key, required this.songs, required this.playingSong});
@@ -29,6 +31,7 @@ class NowPlayingPage extends StatefulWidget {
 class _NowPlayingPageState extends State<NowPlayingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _imageAnimationController;
+  late AudioPlayerManager _audioPlayerManager;
 
   @override
   void initState() {
@@ -37,6 +40,9 @@ class _NowPlayingPageState extends State<NowPlayingPage>
       vsync: this,
       duration: const Duration(milliseconds: 12000),
     );
+    _audioPlayerManager =
+        AudioPlayerManager(songUrl: widget.playingSong.source);
+    _audioPlayerManager.init();
   }
 
   @override
@@ -126,10 +132,35 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                   ],
                 ),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 32,
+                left: 24,
+                right: 24,
+                bottom: 16,
+              ),
+              child: _progressBar(),
             )
           ],
         ),
       ),
     );
+  }
+
+  StreamBuilder<DurationState> _progressBar() {
+    return StreamBuilder<DurationState>(
+        stream: _audioPlayerManager.durationState,
+        builder: (context, snapshot) {
+          final durationState = snapshot.data;
+          final progress = durationState?.progress ?? Duration.zero;
+          final buffered = durationState?.buffered ?? Duration.zero;
+          final total = durationState?.total ?? Duration.zero;
+
+          return ProgressBar(
+            progress: progress,
+            total: total,
+          );
+        });
   }
 }
