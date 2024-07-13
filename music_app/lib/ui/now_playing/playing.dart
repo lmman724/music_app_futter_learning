@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../data/model/song.dart';
 
@@ -81,6 +82,51 @@ class _NowPlayingPageState extends State<NowPlayingPage>
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 64, bottom: 16),
+              child: SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.share_outlined),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.playingSong.title,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.playingSong.artist,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.favorite_outline),
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
