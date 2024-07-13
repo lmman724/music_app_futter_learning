@@ -1,6 +1,7 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../data/model/song.dart';
 import 'audio_player_manager.dart';
@@ -164,31 +165,27 @@ class _NowPlayingPageState extends State<NowPlayingPage>
   }
 
   Widget _mediaButtons() {
-    return const SizedBox(
+    return SizedBox(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          MediaButtonControl(
+          const MediaButtonControl(
               function: null,
               icon: Icons.shuffle,
               color: Colors.deepPurple,
               size: 24),
-          MediaButtonControl(
+          const MediaButtonControl(
               function: null,
               icon: Icons.skip_previous,
               color: Colors.deepPurple,
               size: 36),
-          MediaButtonControl(
-              function: null,
-              icon: Icons.play_arrow_sharp,
-              color: Colors.deepPurple,
-              size: 48),
-          MediaButtonControl(
+          _playButton(),
+          const MediaButtonControl(
               function: null,
               icon: Icons.skip_next,
               color: Colors.deepPurple,
               size: 36),
-          MediaButtonControl(
+          const MediaButtonControl(
               function: null,
               icon: Icons.repeat,
               color: Colors.deepPurple,
@@ -211,6 +208,49 @@ class _NowPlayingPageState extends State<NowPlayingPage>
             progress: progress,
             total: total,
           );
+        });
+  }
+
+  StreamBuilder<PlayerState> _playButton() {
+    return StreamBuilder(
+        stream: _audioPlayerManager.player.playerStateStream,
+        builder: (context, snapshot) {
+          final playState = snapshot.data;
+          final processingState = playState?.processingState;
+          final playing = playState?.playing;
+          if (processingState == ProcessingState.loading ||
+              processingState == ProcessingState.buffering) {
+            return Container(
+              margin: const EdgeInsets.all(8),
+              width: 48,
+              height: 48,
+              child: const CircularProgressIndicator(),
+            );
+          } else if (playing != true) {
+            return MediaButtonControl(
+                function: () {
+                  _audioPlayerManager.player.play();
+                },
+                icon: Icons.play_arrow,
+                color: null,
+                size: 48);
+          } else if (processingState != ProcessingState.completed) {
+            return MediaButtonControl(
+                function: () {
+                  _audioPlayerManager.player.pause();
+                },
+                icon: Icons.pause,
+                color: null,
+                size: 48);
+          } else {
+            return MediaButtonControl(
+                function: () {
+                  _audioPlayerManager.player.seek(Duration.zero);
+                },
+                icon: Icons.replay,
+                color: null,
+                size: 48);
+          }
         });
   }
 }
